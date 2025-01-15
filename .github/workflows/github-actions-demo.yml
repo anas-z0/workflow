@@ -11,7 +11,8 @@ jobs:
         uses: cachix/install-nix-action@v30
       - name: Run update script
         run: |
-          for dir in ./*
-            do cd $dir
+          for dir in ./pkgs/*
+          do
+            test -d $i && cd $dir
             ./update.sh
           done
