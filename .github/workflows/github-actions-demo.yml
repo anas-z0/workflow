@@ -7,7 +7,11 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
+      - name: get nix
+        uses: cachix/install-nix-action@v30
       - name: Run update script
         run: |
-          ls
+          for dir in ./*
+            do cd $dir
+            ./update.sh
 
