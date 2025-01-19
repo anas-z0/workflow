@@ -1,34 +1,34 @@
-{ lib, stdenv, fetchurl, }:
-stdenv.mkDerivation (self: {
+{ lib, stdenv, fetchzip, }:
+stdenv.mkDerivation rec {
   pname = "proton-ge";
   version = "GE-Proton9-23";
-  src = fetchurl {
+  src = fetchzip {
     url =
-      "https://github.com/GloriousEggroll/proton-ge-custom/releases/download/${self.version}/${self.version}.tar.gz";
+      "https://github.com/GloriousEggroll/proton-ge-custom/releases/download/${version}/${version}.tar.gz";
     hash = "sha256-1pWRbn4bjMlwWsR2LIsxFFvEJE4VD8fUIwtSM1MC6I8=";
   };
 
-  dxvk = stdenv.mkDerivation (self: {
+  dxvk = stdenv.mkDerivation rec {
     pname = "dxvk";
     version = "1.10.3";
-    src = fetchurl {
+    src = fetchzip {
       url =
-        "https://github.com/doitsujin/dxvk/releases/download/v${self.version}/dxvk-${self.version}.tar.gz";
+        "https://github.com/doitsujin/dxvk/releases/download/v${version}/dxvk-${version}.tar.gz";
       hash = "sha256-jRo8kSdhtFDIefmEeK5k9vZjnkDOaEgXCg9rhZb9U8Y=";
     };
     buildCommand = ''
-      runHook unpackPhase
-      runHook preBuild
+      runHook preInstall
       mkdir $out
       cp -r ./*/* $out
-      runHook postBuild
+      runHook postInstall
     '';
-  });
+  };
   buildCommand = ''
-    runHook unpackPhase
+    runHook preInstall
     mkdir $out
     cp -r ./*/* $out/
-    ln -sf ${self.dxvk}/x32/* $out/files/lib/wine/dxvk/
-    ln -sf ${self.dxvk}/x64/* $out/files/lib64/wine/dxvk/
+    ln -sf ${dxvk}/x32/* $out/files/lib/wine/dxvk/
+    ln -sf ${dxvk}/x64/* $out/files/lib64/wine/dxvk/
+    runHook postInstall
   '';
-})
+}
