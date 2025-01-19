@@ -11,9 +11,8 @@
     in {
       packages = genSystem (system: let pkgs = pkgsFor system; in 
         pkgs.lib.packagesFromDirectoryRecursive { callPackage = pkgs.callPackage; directory = ./pkgs;
-      }) // {
-        nixUpdateExclude = [ "dxvk" "test" ];
-      };
+      });
+      packages.nixUpdateExclude = ["dxvk"];
     };
   }
 
