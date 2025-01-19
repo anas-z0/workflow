@@ -18,7 +18,7 @@ jobs:
       - name: update script
         run: |
           pkgs=$(nix flake show --json | jq -r '[.packages[] | keys[]] | sort | unique |  join(" ")')
-          excludedPkgs=$(nix eval --json .#packages.nixUpdateExclude | jq -r '.| sort | unique |  join(",")')
+          excludedPkgs=$(nix eval --json .#nixUpdateExclude | jq -r '.| sort | unique |  join(",")')
           excludedPkgs=${excludedPkgs// /}
           excludedPkgs=${excludedPkgs//,/ }
           for pkg in $pkgs; do
