@@ -18,11 +18,15 @@ jobs:
       - name: update script
         run: |
           pkgs=$(nix flake show --json | jq -r '[.packages[] | keys[]] | sort | unique |  join(" ")')
-          excludedPkgs=$(nix eval --json .#nixUpdateExclude | jq -r '.| sort | unique |  join(",")')
-          excludedPkgs=${excludedPkgs// /}
-          excludedPkgs=${excludedPkgs//,/ }
+          pinned=$(nix eval .#pinned --json --apply '(eval: builtins.concatStringsSep "," (builtins.map (x: x + " "  + "'\''" + (eval.${x}) + "'\''" ) (builtins.attrNames eval)))'|jq -r .)
           for pkg in $pkgs; do
-            [[ ",$excludedPkgs," != *",$pkg,"* ]] && nix run github:Mic92/nix-update -- --flake --commit "$pkg" 1>/dev/null
+            for pair in $pinned; do
+              set -- $pair
+              if [[ $1 == $pkg ]]
+                then nix run github:Mic92/nix-update -- --flake --version="$2" --commit "$1" 1>/dev/null
+                else nix run github:Mic92/nix-update -- --flake --commit "$1" 1>/dev/null
+              fi
+            done
           done
           git push
       - name: Setup upterm session
