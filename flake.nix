@@ -2,7 +2,7 @@
   description = "A very basic flake";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
   };
 
   outputs = { self, nixpkgs }: let
@@ -10,7 +10,7 @@
     pkgsFor = system: nixpkgs.legacyPackages."${system}";
     in {
       packages = genSystem (system: let pkgs = pkgsFor system; in 
-        pkgs.packagesFromDirectoryRecursive { callPackage = pkgs.callPackage; directory = ./pkgs;
+        pkgs.lib.packagesFromDirectoryRecursive { callPackage = pkgs.callPackage; directory = ./pkgs;
       });
     };
   }
