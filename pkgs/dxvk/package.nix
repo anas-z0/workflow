@@ -2,7 +2,7 @@
   stdenvNoCC,
   fetchurl
 }:
-stdenv.mkDerivation (self: {
+stdenvNoCC.mkDerivation (self: {
   pname = "dxvk";
   version = "1.10.3";
   versionWithoutV = builtins.replaceStrings [ "v" ] [ "" ] self.version;

@@ -13,7 +13,7 @@
         pkgs.lib.packagesFromDirectoryRecursive { callPackage = pkgs.callPackage; directory = ./pkgs;
       });
       pinned = {
-        dxvk = "1.10.3";
+        dxvk = "v1.10.3";
         test-but-with-space = "9.1.1 ";
         test = "9.1.1";
       };
