@@ -20,13 +20,14 @@ stdenv.mkDerivation (self: {
       runHook unpackPhase
       runHook preBuild
       mkdir $out
-      ln -s $src/* $out
+      cp -r ./*/* $out
       runHook postBuild
     '';
   });
   buildCommand = ''
+    runHook unpackPhase
     mkdir $out
-    ln -s $src/* $out
+    cp -r ./*/* $out/
     ln -sf ${self.dxvk}/x32/* $out/files/lib/wine/dxvk/
     ln -sf ${self.dxvk}/x64/* $out/files/lib64/wine/dxvk/
   '';
