@@ -24,7 +24,7 @@ jobs:
               set -- $pair
               if [[ $1 == $pkg ]]
                 then nix run github:Mic92/nix-update -- --flake --version="$2" --commit "$1" 1>/dev/null
-                else nix run github:Mic92/nix-update -- --flake --commit "$1" 1>/dev/null
+                else nix run github:Mic92/nix-update -- --flake --commit "$pkg" 1>/dev/null
               fi
             done
           done
