@@ -12,7 +12,7 @@
       packages = genSystem (system: let pkgs = pkgsFor system; in 
         pkgs.lib.packagesFromDirectoryRecursive { callPackage = pkgs.callPackage; directory = ./pkgs;
       });
-      packages.nixUpdateExclude = ["dxvk"];
+      nixUpdateExclude = ["dxvk"];
     };
   }
 
