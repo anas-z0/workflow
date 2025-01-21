@@ -4,7 +4,7 @@ fetchurl,
 }:
 stdenv.mkDerivation rec {
   pname = "dxvk";
-  version = "1.10.4";
+  version = "1.10.3";
   src = fetchurl {
     url =
       "https://github.com/doitsujin/dxvk/releases/download/v${version}/dxvk-${version}.tar.gz";
