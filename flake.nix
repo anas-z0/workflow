@@ -17,12 +17,12 @@
         pkgs.lib.packagesFromDirectoryRecursive { callPackage = pkgs.callPackage; directory = ./pkgs;
       });
       updateArgs = {
-        dxvk = "--version v1.10.3";
+        dxvk = "--version-regex 'v(.*)' --version v1.10.3";
       };
       shell = let
         packages = nixpkgs.lib.unique (builtins.concatLists (map (x: builtins.attrNames x) (builtins.attrValues self.packages)));
         argsNames = builtins.attrNames self.updateArgs;
-        list = map (package: "nix-update --commit --flake " + (if (builtins.elem package argsNames) then builtins.concatStringsSep " " [ package self.updateArgs.${package}] else package ) + " 1>/dev/null" ) packages;
+        list = map (package: "nix-update --commit --flake " + (if (builtins.elem package argsNames) then builtins.concatStringsSep " " [ self.updateArgs.${package} package ] else package ) + " 1>/dev/null" ) packages;
         in builtins.concatStringsSep "\n" list;
     };
   }
