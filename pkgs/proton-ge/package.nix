@@ -1,7 +1,7 @@
 { lib, stdenv, fetchurl, }:
 stdenv.mkDerivation rec {
   pname = "proton-ge";
-  version = "GE-Proton9-23";
+  version = "GE-Proton9-22";
   src = fetchurl {
     url =
       "https://github.com/GloriousEggroll/proton-ge-custom/releases/download/${version}/${version}.tar.gz";

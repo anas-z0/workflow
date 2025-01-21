@@ -3,13 +3,13 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nix-update = {
-      url = "github:Mic92/nix-update";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    #nix-update = {
+      #url = "github:Mic92/nix-update";
+      #inputs.nixpkgs.follows = "nixpkgs";
+    #};
   };
 
-  outputs = { self, nixpkgs }@inputs: let
+  outputs = { self, nixpkgs }: let
     genSystem = nixpkgs.lib.genAttrs [ "x86_64-linux" "x86_64-darwin" ];
     pkgsFor = system: nixpkgs.legacyPackages."${system}";
     in {
@@ -17,16 +17,13 @@
         pkgs.lib.packagesFromDirectoryRecursive { callPackage = pkgs.callPackage; directory = ./pkgs;
       });
       updateArgs = {
-        proton-ge = "v1.10.3";
-        test-but-with-space = "9.1.1 ";
-        test = "9.1.1";
+        dxvk = "--version v1.10.3";
       };
-      func = let
-        packages = inputs.nixpkgs.lib.unique (builtins.concatLists (map (x: builtins.attrNames x) (builtins.attrValues self.packages)));
+      shell = let
+        packages = nixpkgs.lib.unique (builtins.concatLists (map (x: builtins.attrNames x) (builtins.attrValues self.packages)));
         argsNames = builtins.attrNames self.updateArgs;
-        args = map (package: if (builtins.elem package argsNames) then builtins.concatStringsSep " " [ "--flake" package self.updateArgs.${package}] else package ) packages;
-      in 
-      test = self;
+        list = map (package: "nix-update --commit --flake " + (if (builtins.elem package argsNames) then builtins.concatStringsSep " " [ package self.updateArgs.${package}] else package ) + " 1>/dev/null" ) packages;
+        in builtins.concatStringsSep "\n" list;
     };
   }
 
