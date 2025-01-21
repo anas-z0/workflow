@@ -17,4 +17,4 @@ stdenv.mkDerivation rec {
     cp -r ./*/* $out
     runHook postInstall
   '';
-};
+}
