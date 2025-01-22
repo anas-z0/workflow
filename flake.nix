@@ -18,11 +18,11 @@
         updateArgs = import ./nix-update.nix;
         packages = nixpkgs.lib.unique (builtins.concatLists
           (map (x: builtins.attrNames x) (builtins.attrValues self.packages)));
-        argsNames = builtins.attrNames self.updateArgs;
+        argsNames = builtins.attrNames updateArgs;
         list = map (package:
           "nix-update --commit --flake "
           + (if (builtins.elem package argsNames) then
-            builtins.concatStringsSep " " [ self.updateArgs.${package} package ]
+            builtins.concatStringsSep " " [ updateArgs.${package} package ]
           else
             package) + " 1>/dev/null") packages;
       in builtins.concatStringsSep "\n" list;
