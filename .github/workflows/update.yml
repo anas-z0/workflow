@@ -1,6 +1,9 @@
 name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: [push]
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 10 * * *"
 permissions:
   contents: write
 jobs:
@@ -19,8 +22,3 @@ jobs:
         run: |
           nix eval .#shell | jq -r | nix shell github:Mic92/nix-update
           git push
-      - name: Setup upterm session
-        uses: lhotari/action-upterm@v1
-        with:
-          limit-access-to-actor: true
-          limit-access-to-users: AnasSaeed1
