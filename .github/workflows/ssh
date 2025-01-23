@@ -1,0 +1,22 @@
+name: ssh github actions
+run-name: ssh github actions
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: get nix
+        uses: cachix/install-nix-action@v30
+      - name: git nobody
+        run : |
+          git config --global user.email "nobody"
+          git config --global user.name "github actions"
+      - name: Setup upterm session
+        uses: lhotari/action-upterm@v1
+        with:
+          limit-access-to-actor: true
+          limit-access-to-users: AnasSaeed1
