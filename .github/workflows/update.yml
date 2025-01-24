@@ -1,5 +1,5 @@
 name: nix-update
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+run-name: update pacakges
 on:
   workflow_dispatch:
   schedule:
