@@ -5,15 +5,30 @@
       genSystem = nixpkgs.lib.genAttrs [ "x86_64-linux" "x86_64-darwin" ];
       pkgsFor = system: nixpkgs.legacyPackages."${system}";
     in {
-      packages = genSystem (system:
+####
+#### THIS DOES NOT MAKE SENSE 
+####
+      #packages = genSystem (system:
+      #  let
+      #    pkgs = pkgsFor system;
+      #    callPackage = pkgs.lib.callPackageWith (pkgs // packages);
+      #    packages = nixpkgs.lib.packagesFromDirectoryRecursive {
+      #      inherit callPackage;
+      #      directory = ./pkgs;
+      #    };
+      #  in packages);
+
+####
+#### THIS MAKES SENSE
+####
+      packages = genSystem (system: (x: x (x {})) (self:
         let
           pkgs = pkgsFor system;
-          callPackage = pkgs.lib.callPackageWith (pkgs // packages);
-          packages = nixpkgs.lib.packagesFromDirectoryRecursive {
+          callPackage = pkgs.lib.callPackageWith (pkgs // self);
+         in nixpkgs.lib.packagesFromDirectoryRecursive {
             inherit callPackage;
             directory = ./pkgs;
-          };
-        in packages);
+          }));
       shell = let
         updateArgs = import ./nix-update.nix;
         packages = nixpkgs.lib.unique (builtins.concatLists
