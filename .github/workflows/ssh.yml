@@ -10,7 +10,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: get nix
-        uses: cachix/install-nix-action@v30
+        uses: cachix/install-nix-action@v31
       - name: git nobody
         run : |
           git config --global user.email "nobody"
