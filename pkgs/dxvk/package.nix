@@ -4,11 +4,12 @@ fetchurl,
 }:
 stdenv.mkDerivation rec {
   pname = "dxvk";
-  version = "v1.10.8";
+  version = "v1.10.9";
   src = fetchurl {
     url =
       "﻿https://github.com/pythonlover02/DXVK-Sarek/releases/download/${version}/dxvk-sarek-async-${version}.tar.gz";
-    hash = "sha256-jRo8kSdhtFDIefmEeK5k9vZjnkDOaEgXCg9rhZb9U8Y=";
+      curlOpts = "-LOC - ";
+    #hash = "sha256-jRo8kSdhtFDIefmEeK5k9vZjnkDOaEgXCg9rhZb9U8Y=";
   };
   buildCommand = ''
     runHook preInstall
