@@ -8,7 +8,7 @@ stdenv.mkDerivation rec {
   src = fetchurl {
     url =
       "﻿https://github.com/pythonlover02/DXVK-Sarek/releases/download/${version}/dxvk-sarek-async-${version}.tar.gz";
-      curlOpts = "-LOC - ";
+      curlOpts = "-L 0o a.tar.gz";
     #hash = "sha256-jRo8kSdhtFDIefmEeK5k9vZjnkDOaEgXCg9rhZb9U8Y=";
   };
   buildCommand = ''
