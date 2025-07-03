@@ -13,7 +13,8 @@ stdenv.mkDerivation rec {
     runHook unpackPhase
     mkdir $out
     cp -r ./*/* $out/
-    ln -sf ${dxvk}/x64/* $out/files/lib/wine/dxvk/
+    ln -sf ${dxvk}/x32/* $out/files/lib/wine/dxvk/
+    ln -sf ${dxvk}/x64/* $out/files/lib/wine/dxvk/x86_64-windows/
     runHook postInstall
   '';
 }
