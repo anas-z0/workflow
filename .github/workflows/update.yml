@@ -17,6 +17,6 @@ jobs:
           git config --global user.name "nix package updater"
       - name: update script
         run: |
-          nix eval --expr "$(for i in $(nix eval .#packagesNoHash.x86_64-linux --apply builtins.attrNames|cut -b 3- |rev|cut -b 3- |rev); do nix eval --expr "{ $i = \"$(nix build .#packagesNoHash.x86_64-linux.$i.src 2>&1|grep got|rev | cut -d' ' -f 1-1 |rev)\";}" ; done | sed -z 's/\n/\/\//g' |rev | cut -b 3- |rev)" > hashes.nix
+          nix eval --expr "$(for i in $(nix eval .#packagesNoHash --apply builtins.attrNames|cut -b 3- |rev|cut -b 3- |rev); do nix eval --expr "{ $i = \"$(nix build .#packagesNoHash.$i.src 2>&1|grep got|rev | cut -d' ' -f 1-1 |rev)\";}" ; done | sed -z 's/\n/\/\//g' |rev | cut -b 3- |rev)" > hashes.nix
           git commit -a -m "update hashes.nix"
           git push
