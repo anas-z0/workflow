@@ -1,7 +1,7 @@
 {
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
   outputs = { self, nixpkgs }:
-    let pkgs = nixpkgs.legacyPackages.x86_64-linux;
+    let pkgs = nixpkgs.legacyPackages.x86_64-linux; lib = nixpkgs.lib;
     in rec {
       packagesNoHash = (x: x (x {})) (self:
         let
