@@ -10,7 +10,7 @@
             inherit callPackage;
             directory = ./pkgs;
           });
-      packages.x86_64-linux = builtins.mapAttrs (n: v: v.overrideAttrs (x: { src = lib.overrideDerivation packagesNoHash.x86_64-linux.${n}.src (x: { outputHash = (import ./hashes.nix).${n}; }); })) packagesNoHash
+      packages.x86_64-linux = builtins.mapAttrs (n: v: v.overrideAttrs (x: { src = lib.overrideDerivation packagesNoHash.x86_64-linux.${n}.src (x: { outputHash = (import ./hashes.nix).${n}; }); })) packagesNoHash;
       shell = let
         updateArgs = import ./nix-update.nix;
         packages = nixpkgs.lib.unique (builtins.concatLists
