@@ -1,34 +1,16 @@
 {
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
   outputs = { self, nixpkgs }:
-    let
-      genSystem = nixpkgs.lib.genAttrs [ "x86_64-linux" "x86_64-darwin" ];
-      pkgsFor = system: nixpkgs.legacyPackages."${system}";
-    in {
-####
-#### THIS DOES NOT MAKE SENSE 
-####
-      #packages = genSystem (system:
-      #  let
-      #    pkgs = pkgsFor system;
-      #    callPackage = pkgs.lib.callPackageWith (pkgs // packages);
-      #    packages = nixpkgs.lib.packagesFromDirectoryRecursive {
-      #      inherit callPackage;
-      #      directory = ./pkgs;
-      #    };
-      #  in packages);
-
-####
-#### THIS MAKES SENSE
-####
-      packages = genSystem (system: (x: x (x {})) (self:
+    let pkgs = nixpkgs.legacyPackages.x86_64-linux;
+    in rec {
+      packagesNoHash = (x: x (x {})) (self:
         let
-          pkgs = pkgsFor system;
           callPackage = pkgs.lib.callPackageWith (pkgs // self);
          in nixpkgs.lib.packagesFromDirectoryRecursive {
             inherit callPackage;
             directory = ./pkgs;
-          }));
+          });
+      packages.x86_64-linux = builtins.mapAttrs (n: v: v.overrideAttrs (x: { src = lib.overrideDerivation packagesNoHash.x86_64-linux.${n}.src (x: { outputHash = (import ./hashes.nix).${n}; }); })) packagesNoHash
       shell = let
         updateArgs = import ./nix-update.nix;
         packages = nixpkgs.lib.unique (builtins.concatLists
