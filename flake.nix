@@ -15,7 +15,7 @@
             "|grep -v '${v.unregex}'"
           else
             "") + ");" + ''
-              echo "  ${n} = { ver = \"$LATEST_TAG\"; url = \"https://github.com/${n}/releases/download/$LATEST_TAG/$ASSET\"; }" '')
+              echo "  \"${n}\" = { ver = \"$LATEST_TAG\"; url = \"https://github.com/${n}/releases/download/$LATEST_TAG/$ASSET\"; }" '')
           (import ./pkgs.nix).github)))) + ";echo }");
       #what = builtins.listToAttrs (builtins.concatLists
         #(map (x: lib.attrsToList x) (map (x:
