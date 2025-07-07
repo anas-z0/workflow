@@ -5,6 +5,28 @@
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
       lib = nixpkgs.lib;
     in (x: x (x { })) (self: {
+      test = pkgs.writers.writeBash "test" ("echo {;" + (builtins.concatStringsSep ";"
+        (map (x: x.value) (lib.attrsToList (builtins.mapAttrs (n: v:
+          "curl https://api.github.com/repos/${n}/releases/latest -so a;"
+          + "export LATEST_TAG=$(cat a | jq -r .tag_name);"
+          + "export ASSET=$(cat a |jq -r .assets.[].name"
+          + (if builtins.hasAttr "regex" v then "|grep '${v.regex}'" else "")
+          + (if builtins.hasAttr "unregex" v then
+            "|grep -v '${v.unregex}'"
+          else
+            "") + ");" + ''
+              echo "  ${n} = { ver = \"$LATEST_TAG\"; url = \"https://github.com/${n}/releases/download/$LATEST_TAG/$ASSET\"; }" '')
+          (import ./pkgs.nix).github)))) + ";echo }");
+      #what = builtins.listToAttrs (builtins.concatLists
+        #(map (x: lib.attrsToList x) (map (x:
+          #let list = (lib.splitString " " x);
+          #in {
+            #${(builtins.elemAt list 0)} = {
+              #ver = (lib.elemAt list 1);
+              #url = (lib.elemAt list 2);
+            #};
+          #}) (lib.lists.tail (lib.lists.reverseList
+            #(lib.splitString "\n" (builtins.readFile ./nonixfmt)))))));
       packagesNoHash = (x: x (x { })) (self:
         let callPackage = pkgs.lib.callPackageWith (pkgs // self);
         in nixpkgs.lib.packagesFromDirectoryRecursive {
