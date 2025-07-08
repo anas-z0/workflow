@@ -8,7 +8,7 @@
     in (x: x (x { })) (self: {
       alien-fake-fzf = nix-alien.packages.x86_64-linux.nix-alien.overrideAttrs
         (x: {
-          nativeBuildInputs = x.nativeBuildInputs ++ [
+          propagatedBuildInputs = x.propagatedBuildInputs ++ [
             (pkgs.writers.writeBashBin "fzf" ''
               if IFS= read -r first_line; then
                   echo "$first_line"
