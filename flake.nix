@@ -6,17 +6,16 @@
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
       lib = nixpkgs.lib;
     in (x: x (x { })) (self: {
-      alien-fake-fzf =
-        inputs.nix-alien.packages.x86_64-linux.nix-alien.overrideAttrs (x: {
-          nativeBuildInpus = x.nativeBuildInputs ++ [
-            (inputs.nixpkgs.legacyPackages.x86_64-linux.writers.writeBashBin
-              "fzf" ''
-                inux.nix-alien.overrideAttrs (x: { nativeBuildInpus = x.nativeBuildInputs ++ [ (inputs.nixpkgs.legacyPackage        >    if IFS= read -r first_line; then
-                                echo "$first_line"
-                            else
-                                # If no input, exit with failure to mimic fzf
-                                exit 1
-                            fi'')
+      alien-fake-fzf = nix-alien.packages.x86_64-linux.nix-alien.overrideAttrs
+        (x: {
+          nativeBuildInputs = x.nativeBuildInputs ++ [
+            (pkgs.writers.writeBashBin "fzf" ''
+              if IFS= read -r first_line; then
+                  echo "$first_line"
+              else
+                  # If no input, exit with failure to mimic fzf
+                  exit 1
+              fi'')
           ];
         });
       test = pkgs.writers.writeBash "test" ("echo {;"
