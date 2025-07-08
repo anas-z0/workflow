@@ -6,18 +6,15 @@
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
       lib = nixpkgs.lib;
     in (x: x (x { })) (self: {
-      alien-fake-fzf = nix-alien.packages.x86_64-linux.nix-alien.overrideAttrs
-        (x: {
-          propagatedBuildInputs = x.propagatedBuildInputs ++ [
-            (pkgs.writers.writeBashBin "fzf" ''
-              if IFS= read -r first_line; then
-                  echo "$first_line"
-              else
-                  # If no input, exit with failure to mimic fzf
-                  exit 1
-              fi'')
-          ];
-        });
+      alien-fake-fzf = nix-alien.packages.x86_64-linux.nix-alien.override {
+        fzf = (pkgs.writers.writeBashBin "fzf" ''
+          if IFS= read -r first_line; then
+              echo "$first_line"
+          else
+              # If no input, exit with failure to mimic fzf
+              exit 1
+          fi'');
+      };
       test = pkgs.writers.writeBash "test" ("echo {;"
         + (builtins.concatStringsSep ";" (map (x: x.value) (lib.attrsToList
           (builtins.mapAttrs (n: v:
