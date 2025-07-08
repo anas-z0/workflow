@@ -6,14 +6,22 @@
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
       lib = nixpkgs.lib;
     in (x: x (x { })) (self: {
-      alien-fake-fzf = nix-alien.packages.x86_64-linux.nix-alien.override {
-        fzf = (pkgs.writers.writeBashBin "fzf" ''
+      packages.x86_64-linux.alien-fake-fzf = let
+        fakeFzf = pkgs.writers.writeBashBin "fzf" ''
           if IFS= read -r first_line; then
               echo "$first_line"
           else
-              # If no input, exit with failure to mimic fzf
               exit 1
-          fi'');
+          fi
+        '';
+      in pkgs.symlinkJoin {
+        name = "alien-fake-fzf";
+        paths = [ nix-alien.packages.x86_64-linux.nix-alien ];
+        postBuild = ''
+          rm $out/bin/*
+          cp ${nix-alien.packages.x86_64-linux.nix-alien}/bin/* $out/bin/
+          for i in $out/bin/*; do sed -i '/wrapped/i PATH=${fakeFzf}/bin:''${PATH}' $i;done
+        '';
       };
       test = pkgs.writers.writeBash "test" ("echo {;"
         + (builtins.concatStringsSep ";" (map (x: x.value) (lib.attrsToList
@@ -44,11 +52,11 @@
           inherit callPackage;
           directory = ./pkgs;
         });
-      packages.x86_64-linux = builtins.mapAttrs (n: v:
-        v.overrideAttrs (x: {
-          src = lib.overrideDerivation self.packagesNoHash.${n}.src
-            (x: { outputHash = (import ./hashes.nix).${n}; });
-        })) self.packagesNoHash;
+      #packages.x86_64-linux = builtins.mapAttrs (n: v:
+      #  v.overrideAttrs (x: {
+      #    src = lib.overrideDerivation self.packagesNoHash.${n}.src
+      #      (x: { outputHash = (import ./hashes.nix).${n}; });
+      #  })) self.packagesNoHash;
       shell = let
         updateArgs = import ./nix-update.nix;
         packages = nixpkgs.lib.unique (builtins.concatLists
