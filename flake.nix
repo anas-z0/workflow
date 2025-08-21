@@ -4,6 +4,14 @@
     let
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
       lib = nixpkgs.lib;
+      putHash = x: fake:
+        builtins.mapAttrs (n: v:
+          v.overrideAttrs (x: {
+            src = lib.overrideDerivation x.src (x: {
+              outputHash =
+                if fake then lib.fakeHash else (import ./hashes.nix)."${n}";
+            });
+          })) x;
     in (x: x (x { })) (self: {
       test = pkgs.writers.writeBash "test" ("echo {;"
         + (builtins.concatStringsSep ";" (map (x: x.value) (lib.attrsToList
@@ -20,17 +28,16 @@
             (import ./pkgs.nix).github)))) + ";echo }");
       packagesNoHash = (x: x (x { })) (self:
         let
-          callPackage = pkgs.lib.callPackageWith
-            (pkgs // self // { sources = import ./packages.nix; });
+          callPackage = pkgs.lib.callPackageWith (pkgs // (putHash self false)
+            // {
+              sources = import ./packages.nix;
+            });
         in nixpkgs.lib.packagesFromDirectoryRecursive {
           inherit callPackage;
           directory = ./pkgs;
         });
-      packages.x86_64-linux = builtins.mapAttrs (n: v:
-        v.overrideAttrs (x: {
-          src = lib.overrideDerivation x.src
-            (x: { outputHash = (import ./hashes.nix)."${n}"; });
-        })) self.packagesNoHash;
+      packagesFakeHash = putHash self.packagesNoHash true;
+      packages.x86_64-linux = putHash self.packagesNoHash false;
       shell = let
         updateArgs = import ./nix-update.nix;
         packages = nixpkgs.lib.unique (builtins.concatLists
