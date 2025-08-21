@@ -1,7 +1,7 @@
 { stdenv, fetchurl, dxvk, sources }:
 stdenv.mkDerivation rec {
   pname = "proton-ge";
-  inherit (sources.github."GloriousEggroll/proton-ge-custom") version url;
+  inherit (sources."GloriousEggroll/proton-ge-custom") version url;
   src = fetchurl { url = url; };
   buildCommand = ''
     runHook preInstall
