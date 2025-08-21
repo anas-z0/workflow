@@ -42,6 +42,11 @@
           inherit callPackage;
           directory = ./pkgs;
         });
+      packagesNoHash = builtins.mapAttrs (n: v:
+        v.overrideAttrs (x: {
+          src = lib.overrideDerivation x.src
+            (x: { outputHash = pkgs.lib.fakeHash};);
+        })) self.packages.x86_64-linux;
       shell = let
         updateArgs = import ./nix-update.nix;
         packages = nixpkgs.lib.unique (builtins.concatLists
