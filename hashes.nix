@@ -1,5 +1,1 @@
-{
-  ani-cli = "sha256-R/YQ02ctTcAEzrVyWlaCHi1YW82iPrMBbbMNP21r0p8=";
-  dxvk = "sha256-Hb7EEqOMUEdoFUlh/Isc1lnh4GsZ7q0/Atarda50I/Q=";
-  proton-ge = "sha256-dgT6q1NWMg7ilHrimBoONZC6KUsVKdSeftA775FOt8g=";
-}
+{ dxvk = "sha256-szFvHgVJMBn1BzLdEo4xXyc/g5XT6c/gI6QmPlpdG5M="; proton-ge = "sha256-R9/8/zRrNcdWSalaASrU6bY3YIfc60Ose2leBPXtPB4="; }
