@@ -6,23 +6,6 @@
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
       lib = nixpkgs.lib;
     in (x: x (x { })) (self: {
-      packages.x86_64-linux.alien-fake-fzf = let
-        fakeFzf = pkgs.writers.writeBashBin "fzf" ''
-          if IFS= read -r first_line; then
-              echo "$first_line"
-          else
-              exit 1
-          fi
-        '';
-      in pkgs.symlinkJoin {
-        name = "alien-fake-fzf";
-        paths = [ nix-alien.packages.x86_64-linux.nix-alien ];
-        postBuild = ''
-          rm $out/bin/*
-          cp ${nix-alien.packages.x86_64-linux.nix-alien}/bin/* $out/bin/
-          for i in $out/bin/*; do sed -i '/wrapped/i PATH=${fakeFzf}/bin:''${PATH}' $i;done
-        '';
-      };
       test = pkgs.writers.writeBash "test" ("echo {;"
         + (builtins.concatStringsSep ";" (map (x: x.value) (lib.attrsToList
           (builtins.mapAttrs (n: v:
