@@ -36,27 +36,12 @@
               "") + ");" + ''
                 echo "  \"${n}\" = { ver = \"$LATEST_TAG\"; url = \"https://github.com/${n}/releases/download/$LATEST_TAG/$ASSET\"; };" '')
             (import ./pkgs.nix).github)))) + ";echo }");
-      #what = builtins.listToAttrs (builtins.concatLists
-      #(map (x: lib.attrsToList x) (map (x:
-      #let list = (lib.splitString " " x);
-      #in {
-      #${(builtins.elemAt list 0)} = {
-      #ver = (lib.elemAt list 1);
-      #url = (lib.elemAt list 2);
-      #};
-      #}) (lib.lists.tail (lib.lists.reverseList
-      #(lib.splitString "\n" (builtins.readFile ./nonixfmt)))))));
-      packagesNoHash = (x: x (x { })) (self:
-        let callPackage = pkgs.lib.callPackageWith (pkgs // self);
+      packages.x86_64-linux = (x: x (x { })) (self:
+        let callPackage = pkgs.lib.callPackageWith (pkgs // self // {flakePath = ./.;});
         in nixpkgs.lib.packagesFromDirectoryRecursive {
           inherit callPackage;
           directory = ./pkgs;
         });
-      #packages.x86_64-linux = builtins.mapAttrs (n: v:
-      #  v.overrideAttrs (x: {
-      #    src = lib.overrideDerivation self.packagesNoHash.${n}.src
-      #      (x: { outputHash = (import ./hashes.nix).${n}; });
-      #  })) self.packagesNoHash;
       shell = let
         updateArgs = import ./nix-update.nix;
         packages = nixpkgs.lib.unique (builtins.concatLists
