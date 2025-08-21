@@ -1,7 +1,6 @@
 {
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-  inputs.nix-alien.url = "github:thiagokokada/nix-alien";
-  outputs = { self, nixpkgs, nix-alien }:
+  outputs = { self, nixpkgs }:
     let
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
       lib = nixpkgs.lib;
@@ -17,19 +16,21 @@
               "|grep -v '${v.unregex}'"
             else
               "") + ");" + ''
-                echo "  \"${n}\" = { ver = \"$LATEST_TAG\"; url = \"https://github.com/${n}/releases/download/$LATEST_TAG/$ASSET\"; };" '')
+                echo "  \"${n}\" = { version = \"$LATEST_TAG\"; url = \"https://github.com/${n}/releases/download/$LATEST_TAG/$ASSET\"; };" '')
             (import ./pkgs.nix).github)))) + ";echo }");
-      packages.x86_64-linux = (x: x (x { })) (self:
-        let callPackage = pkgs.lib.callPackageWith (pkgs // self // {flakePath = ./.;});
+      packagesNoHash = (x: x (x { })) (self:
+        let
+          callPackage = pkgs.lib.callPackageWith
+            (pkgs // self // { sources = import ./packages.nix; });
         in nixpkgs.lib.packagesFromDirectoryRecursive {
           inherit callPackage;
           directory = ./pkgs;
         });
-      packagesNoHash = builtins.mapAttrs (n: v:
+      packages.x86_64-linux = builtins.mapAttrs (n: v:
         v.overrideAttrs (x: {
           src = lib.overrideDerivation x.src
-            (x: { outputHash = pkgs.lib.fakeHash;});
-        })) self.packages.x86_64-linux;
+            (x: { outputHash = (import ./hashes.nix)."${n}"; });
+        })) self.packagesNoHash;
       shell = let
         updateArgs = import ./nix-update.nix;
         packages = nixpkgs.lib.unique (builtins.concatLists

@@ -1,13 +1,8 @@
-{ stdenv, fetchurl, dxvk, }:
+{ stdenv, fetchurl, dxvk, sources }:
 stdenv.mkDerivation rec {
   pname = "proton-ge";
-  version = "GE-Proton10-8";
-  src = fetchurl {
-    url =
-      "https://github.com/GloriousEggroll/proton-ge-custom/releases/download/${version}/${version}.tar.gz";
-    #hash = "sha256-dgT6q1NWMg7ilHrimBoONZC6KUsVKdSeftA775FOt8g=";
-  };
-
+  inherit (sources.github."GloriousEggroll/proton-ge-custom") version url;
+  src = fetchurl { url = url; };
   buildCommand = ''
     runHook preInstall
     runHook unpackPhase
