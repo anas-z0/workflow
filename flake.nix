@@ -37,7 +37,7 @@
           directory = ./pkgs;
         });
       packagesFakeHash = putHash self.packagesNoHash true;
-      packages.x86_64-linux = putHash self.packagesNoHash false;
+      packages.x86_64-linux = putHash self.packagesFakeHash false;
       shell = let
         updateArgs = import ./nix-update.nix;
         packages = nixpkgs.lib.unique (builtins.concatLists
