@@ -8,13 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
       - name: get nix
         uses: cachix/install-nix-action@v31
-      - name: git nobody
-        run : |
-          git config --global user.email "nobody"
-          git config --global user.name "github actions"
       - name: Setup upterm session
         uses: owenthereal/action-upterm@v1
         with:
