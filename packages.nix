@@ -1,5 +1,5 @@
 {
-  "GloriousEggroll/proton-ge-custom" = { version = "GE-Proton11-11"; url = "https://github.com/GloriousEggroll/proton-ge-custom/releases/download/GE-Proton11-11/GE-Proton11-11-aarch64.tar.gz
-GE-Proton11-11-x86_64.tar.gz"; };
+  "GloriousEggroll/proton-ge-custom" = { version = "GE-Proton11-12"; url = "https://github.com/GloriousEggroll/proton-ge-custom/releases/download/GE-Proton11-12/GE-Proton11-12-aarch64.tar.gz
+GE-Proton11-12-x86_64.tar.gz"; };
   "pythonlover02/DXVK-Sarek" = { version = "v1.14.1"; url = "https://github.com/pythonlover02/DXVK-Sarek/releases/download/v1.14.1/"; };
 }
