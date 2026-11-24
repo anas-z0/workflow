@@ -1,1 +1,1 @@
-{ dxvk = ""; proton-ge = "sha256-QJSDOdz6Kz4B/+8xazdTkWbxJX1wClD1Hl4TwM0Yicc="; }
+{ dxvk = ""; proton-ge = "sha256-9jU/RBe9jBFI19sYvDg9jixZxAPjZ0Jf2LnaquzC+tg="; }
